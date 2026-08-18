@@ -1,0 +1,56 @@
+name: CyFoxGuard Security Scan
+
+# Requirement 13: CI/CD mode — non-interactive, --fail-on <severity> gate
+# with correct exit codes. This workflow only runs against a target the
+# repository/organization has already authorized (set via secrets), and the
+# authorization gate still requires CYFOXGUARD_AUTHORIZED to be explicitly
+# set — this workflow does not bypass that gate, it satisfies it.
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Authorized target URL to scan"
+        required: true
+      fail_on:
+        description: "Minimum severity that fails the build"
+        required: false
+        default: "high"
+  # Uncomment to run on a schedule against a pre-approved staging target:
+  # schedule:
+  #   - cron: "0 3 * * 1"
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run CyFoxGuard (safe mode, CI mode)
+        env:
+          # This must be set explicitly by whoever configured this pipeline,
+          # confirming out-of-band that the target below is authorized. It is
+          # NOT set automatically by this workflow file.
+          CYFOXGUARD_AUTHORIZED: ${{ secrets.CYFOXGUARD_AUTHORIZED }}
+        run: >
+          python cyfoxguard.py
+          --target "${{ github.event.inputs.target || secrets.CYFOXGUARD_DEFAULT_TARGET }}"
+          --safe --ci
+          --fail-on "${{ github.event.inputs.fail_on || 'high' }}"
+          --output-dir cyfoxguard_output
+
+      - name: Upload scan artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cyfoxguard-results
+          path: cyfoxguard_output/

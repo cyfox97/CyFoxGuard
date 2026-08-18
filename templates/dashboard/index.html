@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Overview</h1>
+<p class="cfx-meta">Target: <strong>{{ target }}</strong> &middot; Generated {{ generated_at }}</p>
+
+<div class="cfx-grid">
+  <div class="cfx-card cfx-score">
+    <div class="cfx-score-value">{{ security_score }}</div>
+    <div class="cfx-score-label">Security Score</div>
+  </div>
+  <div class="cfx-card">
+    <h3>Findings by Severity</h3>
+    <table class="cfx-table">
+      {% for sev, count in counts_by_severity.items() %}
+      <tr><td><span class="cfx-badge cfx-sev-{{ sev }}">{{ sev }}</span></td><td>{{ count }}</td></tr>
+      {% endfor %}
+    </table>
+  </div>
+  <div class="cfx-card">
+    <h3>Attack Chains</h3>
+    <p>{{ chains|length }} correlated chain(s) detected.</p>
+    <a class="cfx-link" href="/chains">View chains &rarr;</a>
+  </div>
+</div>
+
+<h3>Top Findings</h3>
+<table class="cfx-table">
+  <tr><th>Title</th><th>Severity</th><th>Confidence</th><th>Endpoint</th></tr>
+  {% for f in findings[:8] %}
+  <tr>
+    <td>{{ f.title }}</td>
+    <td><span class="cfx-badge cfx-sev-{{ f.severity }}">{{ f.severity }}</span></td>
+    <td class="cfx-conf-{{ f.confidence }}">{{ f.confidence }}</td>
+    <td>{{ f.endpoint }}</td>
+  </tr>
+  {% endfor %}
+</table>
+<a class="cfx-link" href="/findings">View all findings &rarr;</a>
+{% endblock %}

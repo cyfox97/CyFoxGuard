@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CyFoxGuard Assessment Report &mdash; {{ target }}</title>
+<style>
+  :root { --cfx-green: #39FF14; --cfx-bg: #0d0d0d; --cfx-panel: #121212; --cfx-border: rgba(57,255,20,0.35); }
+  * { box-sizing: border-box; }
+  body { margin:0; background: var(--cfx-bg); color:#e8e8e8; font-family: -apple-system, Segoe UI, Roboto, Helvetica, sans-serif; line-height:1.55; }
+  .cover { min-height: 100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; border-bottom: 1px solid var(--cfx-border); padding: 40px; }
+  .cover h1 { font-size: 3rem; color: var(--cfx-green); text-shadow: 0 0 16px rgba(57,255,20,0.6); margin-bottom: 4px; }
+  .cover h2 { font-weight: 400; color:#ccc; margin-top:0; }
+  .cover .meta { margin-top: 32px; color:#9aa; font-size:0.95rem; }
+  section { max-width: 980px; margin: 0 auto; padding: 48px 24px; border-bottom: 1px solid #1c1c1c; }
+  h2.section-title { color: var(--cfx-green); text-shadow: 0 0 8px rgba(57,255,20,0.45); border-bottom: 1px solid var(--cfx-border); padding-bottom: 8px; }
+  h3 { color: #d8ffd0; }
+  table { width:100%; border-collapse: collapse; margin: 16px 0; }
+  th, td { border: 1px solid #2a2a2a; padding: 8px 10px; text-align:left; font-size: 0.9rem; }
+  th { background: var(--cfx-panel); color: var(--cfx-green); }
+  .score-badge { display:inline-block; font-size: 2.4rem; font-weight:700; color: var(--cfx-green); text-shadow: 0 0 12px rgba(57,255,20,0.6); border: 2px solid var(--cfx-border); border-radius: 50%; width: 110px; height:110px; line-height:106px; text-align:center; }
+  .badge { display:inline-block; padding: 2px 10px; border-radius: 999px; font-size: 0.75rem; font-weight:600; text-transform:uppercase; letter-spacing:0.03em; box-shadow: 0 0 8px rgba(0,0,0,0.4); }
+  .sev-critical { background: #ff1744; color:#fff; box-shadow:0 0 10px rgba(255,23,68,0.6); }
+  .sev-high { background: #ff6d00; color:#101010; box-shadow:0 0 10px rgba(255,109,0,0.5); }
+  .sev-medium { background: #ffd600; color:#101010; box-shadow:0 0 10px rgba(255,214,0,0.5); }
+  .sev-low { background: var(--cfx-green); color:#101010; box-shadow:0 0 10px rgba(57,255,20,0.5); }
+  .sev-info { background: #444; color:#eee; }
+  .conf-confirmed { color: var(--cfx-green); font-weight:700; }
+  .conf-high { color:#9be36b; }
+  .conf-medium { color:#e0c060; }
+  .conf-low { color:#9aa; font-style: italic; }
+  .finding { background: var(--cfx-panel); border: 1px solid #232323; border-left: 4px solid var(--cfx-green); border-radius: 6px; padding: 18px 20px; margin-bottom: 18px; }
+  .finding h4 { margin: 0 0 6px 0; color:#fff; }
+  .finding .tags { margin: 6px 0 12px 0; }
+  .finding dl { display:grid; grid-template-columns: 160px 1fr; gap: 4px 12px; font-size:0.88rem; }
+  .finding dt { color:#8a9; }
+  .finding dd { margin:0; color:#ddd; }
+  .verify-note { color:#e0c060; font-size:0.82rem; margin-top:8px; }
+  .matrix td.zero { color:#444; }
+  .matrix td.hit { color: var(--cfx-green); font-weight:700; }
+  code, pre { background:#0a0a0a; color:#c8ffb8; border:1px solid #1e1e1e; border-radius:4px; padding: 2px 6px; font-size:0.85rem; }
+  pre { padding: 12px; overflow-x:auto; white-space: pre-wrap; word-break: break-word; }
+  .toc a { color: var(--cfx-green); text-decoration:none; }
+  .toc li { margin-bottom:6px; }
+  .disclaimer { font-size:0.85rem; color:#8892a0; background:#101a10; border:1px solid var(--cfx-border); border-radius:6px; padding:14px 16px; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>CyFoxGuard</h1>
+  <h2>Web &amp; API Penetration Testing Assessment Report</h2>
+  <div class="meta">
+    <div><strong>Target:</strong> {{ target }}</div>
+    <div><strong>Generated:</strong> {{ generated_at }}</div>
+    <div><strong>Mode:</strong> {{ "Safe mode (reduced blast radius)" if safe_mode else "Full assessment" }}</div>
+  </div>
+</div>
+
+<section class="toc">
+  <h2 class="section-title">Table of Contents</h2>
+  <ul>
+    <li><a href="#scope">1. Scope &amp; Methodology</a></li>
+    <li><a href="#exec">2. Executive Summary</a></li>
+    <li><a href="#matrix">3. Risk Matrix</a></li>
+    <li><a href="#chains">4. Attack Chains</a></li>
+    <li><a href="#findings">5. Detailed Findings</a></li>
+    <li><a href="#appendix">6. Appendix: Raw Evidence</a></li>
+  </ul>
+</section>
+
+<section id="scope">
+  <h2 class="section-title">1. Scope &amp; Methodology</h2>
+  <p><strong>Target:</strong> {{ target }}</p>
+  <p>This assessment was performed by CyFoxGuard, an automated Web &amp; API penetration
+  testing toolkit, covering seven modules: Security Headers, SQL Injection, XSS,
+  OpenAPI Parsing &amp; Shadow API Diff, JWT Analysis, Multi-Identity BOLA/IDOR, and
+  Rate Limiting. {{ tool_availability_summary }}</p>
+  <div class="disclaimer">
+    <strong>Honest scope statement.</strong> This tool does not claim zero false
+    positives, does not claim to make software "unhackable," and does not claim
+    guaranteed detection of unknown (zero-day) vulnerability classes. Findings are
+    labeled with an explicit confidence level; only findings with two independent
+    corroborating signals are marked "confirmed." Statistical anomalies are shown
+    as low-confidence, manual-review items only &mdash; they are pattern deviations,
+    not verified vulnerabilities. All output in this report is treated as
+    untrusted and HTML-escaped before rendering, including data reflected back
+    from the target itself.
+  </div>
+</section>
+
+<section id="exec">
+  <h2 class="section-title">2. Executive Summary</h2>
+  <div style="display:flex; gap:32px; align-items:center; flex-wrap:wrap;">
+    <div class="score-badge">{{ security_score }}</div>
+    <div>
+      <p><strong>{{ total_findings }}</strong> unique findings after deduplication.</p>
+      <table>
+        <tr><th>Severity</th>{% for sev in severity_levels %}<th>{{ sev|capitalize }}</th>{% endfor %}</tr>
+        <tr><td>Count</td>{% for sev in severity_levels %}<td>{{ counts_by_severity[sev] }}</td>{% endfor %}</tr>
+      </table>
+      <table>
+        <tr><th>Confidence</th><th>Confirmed</th><th>High</th><th>Medium</th><th>Low (manual review)</th></tr>
+        <tr><td>Count</td><td>{{ counts_by_confidence["confirmed"] }}</td><td>{{ counts_by_confidence["high"] }}</td><td>{{ counts_by_confidence["medium"] }}</td><td>{{ counts_by_confidence["low"] }}</td></tr>
+      </table>
+    </div>
+  </div>
+  <p style="font-size:0.85rem;color:#8892a0;">Security score is a simple weighted
+  heuristic (100 minus severity-and-confidence-weighted deductions), not a
+  standardized industry metric &mdash; use it as a rough talking point, not a
+  compliance figure.</p>
+</section>
+
+<section id="matrix">
+  <h2 class="section-title">3. Risk Matrix (Severity &times; Likelihood)</h2>
+  <table class="matrix">
+    <tr><th>Severity \ Likelihood</th>{% for lik in likelihood_levels %}<th>{{ lik|capitalize }}</th>{% endfor %}</tr>
+    {% for sev in severity_levels|reverse %}
+    <tr>
+      <td>{{ sev|capitalize }}</td>
+      {% for lik in likelihood_levels %}
+        <td class="{{ 'hit' if risk_matrix[sev][lik] > 0 else 'zero' }}">{{ risk_matrix[sev][lik] }}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </table>
+</section>
+
+<section id="chains">
+  <h2 class="section-title">4. Attack Chains</h2>
+  {% if chains %}
+    {% for chain in chains %}
+      <div class="finding" style="border-left-color:#ff6d00;">
+        <h4>{{ chain.name }} &mdash; Risk {{ chain.risk_score }}/100</h4>
+        <p>{{ chain.description }}</p>
+        {% if chain.narrative %}<p><em>{{ chain.narrative }}</em></p>{% endif %}
+        <dl>
+          <dt>CVSS 3.1</dt><dd>{{ chain.cvss_vector }} ({{ chain.cvss_score }})</dd>
+          <dt>Component findings</dt><dd>{{ chain.finding_ids|join(", ") }}</dd>
+        </dl>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No deterministic attack-chain correlations were triggered by this finding set.</p>
+  {% endif %}
+</section>
+
+<section id="findings">
+  <h2 class="section-title">5. Detailed Findings</h2>
+  {% for f in findings %}
+    <div class="finding">
+      <h4>{{ f.title }}</h4>
+      <div class="tags">
+        <span class="badge sev-{{ f.severity.value }}">{{ f.severity.value }}</span>
+        <span class="conf-{{ f.confidence.value }}">{{ f.confidence.value }}</span>
+        {% if f.instance_count > 1 %}<span class="badge sev-info">&times;{{ f.instance_count }} instances</span>{% endif %}
+      </div>
+      <dl>
+        <dt>Endpoint</dt><dd>{{ f.endpoint }}</dd>
+        {% if f.parameter %}<dt>Parameter</dt><dd>{{ f.parameter }}</dd>{% endif %}
+        <dt>Module</dt><dd>{{ f.module }}</dd>
+        <dt>CWE</dt><dd>{{ f.cwe or "N/A" }}</dd>
+        <dt>OWASP</dt><dd>{{ f.owasp or "N/A" }}</dd>
+        <dt>CVSS 3.1</dt><dd>{{ f.cvss_vector or "N/A" }} {% if f.cvss_score %}(score {{ f.cvss_score }}){% endif %}</dd>
+        <dt>Likelihood</dt><dd>{{ f.likelihood }}</dd>
+        <dt>Fingerprint</dt><dd><code>{{ f.fingerprint }}</code></dd>
+      </dl>
+      <p>{{ f.description }}</p>
+      {% if f.needs_manual_verification %}<p class="verify-note">&#9888; Low confidence &mdash; needs manual verification before acting on this finding.</p>{% endif %}
+      <p><strong>Remediation:</strong> {{ f.remediation }}</p>
+    </div>
+  {% endfor %}
+</section>
+
+<section id="appendix">
+  <h2 class="section-title">6. Appendix: Raw Request/Response Evidence</h2>
+  {% for f in findings %}
+    {% if f.evidence %}
+      <div class="finding">
+        <h4>{{ f.fingerprint }} &mdash; {{ f.title }}</h4>
+        <p><strong>Signals:</strong> {{ f.evidence.signal_1 }}{% if f.evidence.signal_2 %}, {{ f.evidence.signal_2 }}{% endif %}</p>
+        <pre>Request: {{ f.evidence.request_summary }}</pre>
+        <pre>Response: {{ f.evidence.response_summary }}</pre>
+        {% if f.evidence.raw_request %}<pre>{{ f.evidence.raw_request }}</pre>{% endif %}
+        {% if f.evidence.raw_response %}<pre>{{ f.evidence.raw_response }}</pre>{% endif %}
+      </div>
+    {% endif %}
+  {% endfor %}
+</section>
+
+</body>
+</html>

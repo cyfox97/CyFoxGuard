@@ -1,0 +1,24 @@
+version: "3.8"
+
+# Demo/lab environment. Requirement 14: brings up a disposable, pre-authorized
+# target for CyFoxGuard to scan. This file starts OWASP Juice Shop directly.
+#
+# crAPI is intentionally NOT vendored here with guessed image names: OWASP
+# publishes its own multi-service docker-compose.yml (Postgres, MongoDB,
+# identity/community/workshop services, Kafka, mailhog, etc.) that changes
+# over time. See DEMO.md for the exact, official commands to fetch and run
+# it alongside this file so both targets are up together.
+
+services:
+  juice-shop:
+    image: bkimminich/juice-shop:latest
+    container_name: cyfoxguard-juice-shop
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - cyfoxguard-demo
+
+networks:
+  cyfoxguard-demo:
+    driver: bridge

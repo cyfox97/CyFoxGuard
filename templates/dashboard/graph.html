@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Attack Graph</h1>
+{% if has_graph %}
+<iframe src="/attack-graph-embed" class="cfx-graph-frame" title="CyFoxGuard Attack Graph"></iframe>
+<p class="cfx-meta">The attack graph is also saved standalone as <code>attack_graph.html</code> in your output directory and can be opened directly, with no server needed.</p>
+{% else %}
+<p>No attack graph was generated for this scan (no findings/chains to graph).</p>
+{% endif %}
+{% endblock %}

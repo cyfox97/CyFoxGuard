@@ -1,0 +1,145 @@
+:root {
+  --cfx-green: #39FF14;
+  --cfx-bg: #0d0d0d;
+  --cfx-panel: #121212;
+  --cfx-border: rgba(57, 255, 20, 0.35);
+  --cfx-glow: rgba(57, 255, 20, 0.5);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--cfx-bg);
+  color: #e8e8e8;
+  font-family: -apple-system, "Segoe UI", Roboto, Helvetica, sans-serif;
+}
+
+.cfx-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 14px 24px;
+  background: var(--cfx-panel);
+  border-bottom: 1px solid var(--cfx-border);
+  box-shadow: 0 0 16px rgba(57, 255, 20, 0.08);
+}
+
+.cfx-logo {
+  color: var(--cfx-green);
+  font-weight: 700;
+  font-size: 1.25rem;
+  text-shadow: 0 0 10px var(--cfx-glow);
+  margin-right: 12px;
+}
+
+.cfx-nav a {
+  color: #cfe;
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: color 0.15s, text-shadow 0.15s;
+}
+
+.cfx-nav a:hover {
+  color: var(--cfx-green);
+  text-shadow: 0 0 8px var(--cfx-glow);
+}
+
+.cfx-main { max-width: 1100px; margin: 0 auto; padding: 32px 24px 64px; }
+
+h1 {
+  color: var(--cfx-green);
+  text-shadow: 0 0 10px var(--cfx-glow);
+  margin-bottom: 4px;
+}
+
+h3 { color: #d8ffd0; }
+
+.cfx-meta { color: #9aa; font-size: 0.9rem; }
+
+.cfx-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.cfx-card {
+  background: var(--cfx-panel);
+  border: 1px solid #222;
+  border-left: 3px solid var(--cfx-green);
+  border-radius: 8px;
+  padding: 18px 20px;
+  box-shadow: 0 0 14px rgba(57, 255, 20, 0.06);
+}
+
+.cfx-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.cfx-score-value {
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: var(--cfx-green);
+  text-shadow: 0 0 14px var(--cfx-glow);
+}
+
+.cfx-score-label { color: #9aa; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em; }
+
+.cfx-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+.cfx-table th, .cfx-table td { border: 1px solid #222; padding: 8px 10px; text-align: left; font-size: 0.88rem; }
+.cfx-table th { background: #161616; color: var(--cfx-green); }
+
+.cfx-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.cfx-sev-critical { background: #ff1744; color: #fff; box-shadow: 0 0 8px rgba(255,23,68,0.6); }
+.cfx-sev-high { background: #ff6d00; color: #101010; box-shadow: 0 0 8px rgba(255,109,0,0.5); }
+.cfx-sev-medium { background: #ffd600; color: #101010; box-shadow: 0 0 8px rgba(255,214,0,0.5); }
+.cfx-sev-low { background: var(--cfx-green); color: #101010; box-shadow: 0 0 8px var(--cfx-glow); }
+.cfx-sev-info { background: #444; color: #eee; }
+
+.cfx-conf-confirmed { color: var(--cfx-green); font-weight: 700; text-shadow: 0 0 6px var(--cfx-glow); }
+.cfx-conf-high { color: #9be36b; }
+.cfx-conf-medium { color: #e0c060; }
+.cfx-conf-low { color: #9aa; font-style: italic; }
+
+.cfx-finding { border-left-color: var(--cfx-green); margin-bottom: 16px; }
+.cfx-verify { color: #e0c060; font-size: 0.85rem; }
+.cfx-remediation { color: #cde; }
+
+.cfx-link { color: var(--cfx-green); text-decoration: none; text-shadow: 0 0 6px var(--cfx-glow); }
+.cfx-link:hover { text-decoration: underline; }
+
+.cfx-graph-frame {
+  width: 100%;
+  height: 78vh;
+  border: 1px solid var(--cfx-border);
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(57,255,20,0.1);
+}
+
+button, .cfx-btn {
+  background: var(--cfx-panel);
+  color: var(--cfx-green);
+  border: 1px solid var(--cfx-border);
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(57,255,20,0.15);
+  transition: box-shadow 0.15s;
+}
+button:hover, .cfx-btn:hover { box-shadow: 0 0 16px rgba(57,255,20,0.4); }

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Attack Chains</h1>
+{% if not chains %}
+<p>No deterministic attack-chain correlations were triggered for this scan.</p>
+{% endif %}
+{% for c in chains %}
+<div class="cfx-card cfx-finding">
+  <h3>{{ c.name }} <span class="cfx-badge cfx-sev-critical">Risk {{ c.risk_score }}/100</span></h3>
+  <p>{{ c.description }}</p>
+  {% if c.narrative %}<p><em>{{ c.narrative }}</em></p>{% endif %}
+  <p class="cfx-meta">CVSS: {{ c.cvss_vector }} ({{ c.cvss_score }})</p>
+  <p class="cfx-meta">Component findings: {{ c.finding_ids|join(", ") }}</p>
+</div>
+{% endfor %}
+{% endblock %}

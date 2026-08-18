@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Findings</h1>
+{% for f in findings %}
+<div class="cfx-card cfx-finding">
+  <h3>{{ f.title }}
+    <span class="cfx-badge cfx-sev-{{ f.severity }}">{{ f.severity }}</span>
+    <span class="cfx-conf-{{ f.confidence }}">{{ f.confidence }}</span>
+    {% if f.instance_count > 1 %}<span class="cfx-badge cfx-sev-info">&times;{{ f.instance_count }}</span>{% endif %}
+  </h3>
+  <p class="cfx-meta">{{ f.endpoint }}{% if f.parameter %} &middot; param: {{ f.parameter }}{% endif %} &middot; {{ f.module }}</p>
+  <p>{{ f.description }}</p>
+  {% if f.needs_manual_verification %}<p class="cfx-verify">&#9888; Needs manual verification</p>{% endif %}
+  <p class="cfx-remediation"><strong>Remediation:</strong> {{ f.remediation }}</p>
+  <p class="cfx-meta">CWE: {{ f.cwe or "N/A" }} &middot; OWASP: {{ f.owasp or "N/A" }} &middot; CVSS: {{ f.cvss_vector or "N/A" }} ({{ f.cvss_score }})</p>
+</div>
+{% endfor %}
+{% endblock %}

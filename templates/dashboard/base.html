@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CyFoxGuard Dashboard</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<nav class="cfx-nav">
+  <div class="cfx-logo">CyFoxGuard</div>
+  <a href="/">Overview</a>
+  <a href="/findings">Findings</a>
+  <a href="/chains">Attack Chains</a>
+  <a href="/graph">Attack Graph</a>
+</nav>
+<main class="cfx-main">
+{% block content %}{% endblock %}
+</main>
+</body>
+</html>
